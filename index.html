@@ -126,6 +126,14 @@ body.open .panel { transform: none; }
 .quote .ar { display: block; font-size: 26px; font-weight: 500; line-height: 1.5; text-align: right; }
 .quote .meta { font-size: 12.5px; color: var(--dim); line-height: 1.6; margin-top: 8px; }
 .quote .meta b { color: var(--accent); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: 10.5px; margin-right: 6px; }
+.essays { display: grid; gap: 0; }
+.essay { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--hair); color: var(--ink); text-decoration: none; }
+.essay .ar { font-size: 17px; font-weight: 500; order: 2; text-align: right; }
+.essay small { color: var(--dim); font-size: 11.5px; white-space: nowrap; order: 1; }
+.essay:hover .ar { color: var(--accent); }
+.essay.feat .ar { font-size: 20px; }
+.essay.feat small { color: var(--accent); }
+.more-link { color: var(--accent); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--accent); }
 .contact { display: grid; gap: 0; }
 .contact div { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 16px 0; border-bottom: 1px solid var(--hair); }
 .contact small { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); width: 90px; }
@@ -289,9 +297,17 @@ const S = {
       <dt>Voice</dt><dd>A point of view, not marketing, built on its Arabic name, meaning "abundant".</dd>
       <dt>The strategic move</dt><dd>A homepage built on the name, <span class="ar">نفس الفكرة.. بس جَم.</span>, plus four cornerstone LinkedIn essays.</dd></dl></div></div>` },
 
-  writing: { label: "arabic writing", sub: "lines I wrote", html: `
+  writing: { label: "arabic writing", sub: "essays & brand lines", html: `
     <p class="kicker">Arabic writing</p>
-    <h2>Lines I wrote, and why they sound the way they do</h2>
+    <h2>I write essays, not only captions</h2>
+    <p class="what"><span class="ar">حوار داخلي</span> — my column on Kitabh: 16 essays since June 2026 on film, music, art and the inner life, read 5,000+ times.</p>
+    <p class="insight" style="font-size:19px"><span class="ar">كاتب يحاول الهروب من كهفه ..</span></p>
+    <h3>Most read</h3>
+    <div class="essays"><a class="essay feat" href="https://kitabh.com/p/ليل-أطول-f6ea1" target="_blank" rel="noopener"><span class="ar">ليل أطول</span><small>14 Nov 2026 · most read ↗</small></a><a class="essay feat" href="https://kitabh.com/p/أطارد-الفن-وأطرد-من-الواقع-8a9ab" target="_blank" rel="noopener"><span class="ar">أطارد الفن وأُطرَد من الواقع</span><small>29 Aug 2026 · most read ↗</small></a><a class="essay feat" href="https://kitabh.com/p/وداعا-unbounded-09d93" target="_blank" rel="noopener"><span class="ar">وداعًا Unbounded</span><small>14 Aug 2026 · most read ↗</small></a></div>
+    <h3>All essays</h3>
+    <div class="essays"><a class="essay" href="https://kitabh.com/p/كذبت-أنا-دائما-8fafb" target="_blank" rel="noopener"><span class="ar">كذبت، أنا دائمًا...</span><small>7 Nov 2026</small></a><a class="essay" href="https://kitabh.com/p/لمست-الحرية-f2d03" target="_blank" rel="noopener"><span class="ar">لمستُ الحرية</span><small>31 Oct 2026</small></a><a class="essay" href="https://kitabh.com/p/تعويذة-الأغاني-نوستالجيا-بلحن-غيرنا-2a172" target="_blank" rel="noopener"><span class="ar">تعويذة الأغاني: نوستالجيا بلحن غيرنا</span><small>7 Aug 2026</small></a><a class="essay" href="https://kitabh.com/p/من-الخارج-إلى-الداخل-أوديسة-نولان-efe8f" target="_blank" rel="noopener"><span class="ar">من الخارج إلى الداخل: أوديسة نولان</span><small>31 Jul 2026</small></a><a class="essay" href="https://kitabh.com/p/النشيد-الوطني-للحالمين-7a049" target="_blank" rel="noopener"><span class="ar">النشيد الوطني للحالمين</span><small>25 Jul 2026</small></a><a class="essay" href="https://kitabh.com/p/النهاية-حدثت-قبل-أربع-سنوات-8f419" target="_blank" rel="noopener"><span class="ar">النهاية حدثت قبل أربع سنوات</span><small>20 Jul 2026</small></a><a class="essay" href="https://kitabh.com/p/هكذا-تكلم-الدرويش-71586" target="_blank" rel="noopener"><span class="ar">هكذا تكلم الدرويش</span><small>18 Jul 2026</small></a><a class="essay" href="https://kitabh.com/p/المعمى-أن-تكتب-كي-لا-تقول-bfa2e" target="_blank" rel="noopener"><span class="ar">المُعمّى: أن تكتب كي لا تقول</span><small>12 Jul 2026</small></a><a class="essay" href="https://kitabh.com/p/المراهقة-كيوتوبيا-اجتماعية-8354a" target="_blank" rel="noopener"><span class="ar">المراهقة كيوتوبيا اجتماعية</span><small>2 Jul 2026</small></a><a class="essay" href="https://kitabh.com/p/وماذا-عن-كتبي-إذا-هربت-df4d4" target="_blank" rel="noopener"><span class="ar">وماذا عن كتبي إذا هربت؟</span><small>26 Jun 2026</small></a><a class="essay" href="https://kitabh.com/p/اللامكان-عن-العيش-في-مساحات-لا-تتذكرنا-c0e42" target="_blank" rel="noopener"><span class="ar">اللامكان: عن العيش في مساحات لا تتذكّرنا</span><small>19 Jun 2026</small></a><a class="essay" href="https://kitabh.com/p/وهم-المنتصف-العارض-لا-يقيم-14cda" target="_blank" rel="noopener"><span class="ar">وهم المنتصف: العارض لا يُقيم</span><small>12 Jun 2026</small></a><a class="essay" href="https://kitabh.com/p/هوس-2026-1aba7" target="_blank" rel="noopener"><span class="ar">«هوس» 2026</span><small>11 Jun 2026</small></a></div>
+    <p style="margin-top:14px"><a class="more-link" href="https://kitabh.com/@mqaraani" target="_blank" rel="noopener">Read me on Kitabh ↗</a></p>
+    <h3>Lines I wrote for brands</h3>
     <div class="quote"><span class="ar">خامة تفهمك .. راحة تغمرك .. أناقة تشبهك</span><div class="meta"><b>AWAL</b>Product line for refined adults, 22+. Between white dialect and Fusha: quality and belonging in one breath.</div></div>
     <div class="quote"><span class="ar">عِش الحين، احسب بعدين</span><div class="meta"><b>Prime Ticket × Tabby</b>Removes the payment barrier for event-goers. Colloquial and urgent: the moment can't wait, the payment can.</div></div>
     <div class="quote"><span class="ar">حلا لكل جمعاتكم</span><div class="meta"><b>RIYD</b>Brand umbrella for families and friends in Riyadh. Warm Gulf dialect: the brand belongs at the gathering.</div></div>
@@ -310,7 +326,7 @@ const S = {
       <div>Brand engagements<em>ongoing</em><span>AWAL · RIYD · AM PM, as separate clients</span></div>
     </div>
     <h3>Background</h3>
-    <p>Bachelor's Degree in Information Technology, Taif University. Before content management: freelance social media and copy for cafés, startups and agencies. Off the clock: essays and film writing.</p>` },
+    <p>Bachelor's Degree in Information Technology, Taif University. Before content management: freelance social media and copy for cafés, startups and agencies. Off the clock: Arabic essays on film, music and art — my column <span class="ar" style="color:inherit">حوار داخلي</span> on <a class="more-link" href="https://kitabh.com/@mqaraani" target="_blank" rel="noopener">Kitabh ↗</a>.</p>` },
 
   lead: { label: "how I lead", sub: "the roots", html: `
     <p class="kicker">Content leadership</p>
