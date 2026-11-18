@@ -4,7 +4,7 @@ Daily improvement queue. Each daily run takes the FIRST unchecked item, ships it
 Only Moastapha adds items about his career content. Never invent facts, numbers, clients or quotes.
 
 ## Queue
-- [ ] Link previews: add Open Graph / Twitter meta (title, description) and a 1200x630 og-image.jpg generated from the palm scene, so the link looks good on WhatsApp, LinkedIn and X
+- [x] Link previews: add Open Graph / Twitter meta (title, description) and a 1200x630 og-image.jpg generated from the palm scene, so the link looks good on WhatsApp, LinkedIn and X
 - [ ] Favicon: a tiny grainy palm (SVG + 32px PNG) in the site's palette
 - [ ] Gentle wind: slow, subtle sway of the fronds (respect prefers-reduced-motion; keep CPU low)
 - [ ] Hover preview: hovering a frond label slightly brightens that frond on the canvas
