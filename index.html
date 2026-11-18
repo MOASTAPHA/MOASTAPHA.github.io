@@ -25,11 +25,11 @@
 <style>
 :root {
   /* One visual world: a grainy palm at night. Fronds are the navigation; a panel opens beside the zoomed frond. */
-  --night: #26262b;
-  --night-deep: #1a1a1e;
+  --night: #151d2e;
+  --night-deep: #0c1220;
   --ink: #d6d5d0;
   --dim: #8f8e8a;
-  --hair: #4a4a50;
+  --hair: #34405a;
   --accent: #e8573f;
   --display: "Newsreader", Georgia, "Times New Roman", serif;
   --body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
@@ -47,7 +47,7 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block
 svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 svg.lines path { stroke: var(--ink); stroke-width: .8; fill: none; opacity: .75; }
 
-.tag { position: absolute; font-size: 14px; letter-spacing: .01em; white-space: nowrap; padding: 6px 4px; color: var(--ink); transition: color .25s, opacity .5s; }
+.tag { position: absolute; text-shadow: 0 0 6px var(--night), 0 0 12px var(--night); font-size: 14px; letter-spacing: .01em; white-space: nowrap; padding: 6px 4px; color: var(--ink); transition: color .25s, opacity .5s; }
 .tag:hover, .tag[aria-current="true"] { color: var(--accent); }
 .tag .sub { display: block; font-size: 10.5px; color: var(--dim); letter-spacing: .06em; text-transform: lowercase; }
 .tag.right { text-align: left; } .tag.left { text-align: right; }
@@ -74,7 +74,7 @@ body.open .tag:not([aria-current="true"]) { opacity: .25; }
 body.open .intro, body.open .hint, body.open .note { opacity: 0; pointer-events: none; }
 
 /* panel */
-.panel { position: fixed; top: 10px; right: 10px; bottom: 10px; width: min(600px, calc(100% - 20px)); background: rgba(22,22,26,.94); backdrop-filter: blur(6px); border-left: 1px solid var(--hair); border-radius: 0 6px 6px 0; transform: translateX(105%); transition: transform .8s cubic-bezier(.65,0,.25,1) .15s; overflow-y: auto; z-index: 5; }
+.panel { position: fixed; top: 10px; right: 10px; bottom: 10px; width: min(600px, calc(100% - 20px)); background: rgba(14,20,34,.94); backdrop-filter: blur(6px); border-left: 1px solid var(--hair); border-radius: 0 6px 6px 0; transform: translateX(105%); transition: transform .8s cubic-bezier(.65,0,.25,1) .15s; overflow-y: auto; z-index: 5; }
 body.open .panel { transform: none; }
 .panel-inner { padding: 34px 40px 60px; }
 .back { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--dim); margin-bottom: 26px; }
@@ -378,52 +378,64 @@ function draw() {
   const top = { x: cx + 26 * k, y: H * (narrow ? .42 : .36) };
   const ctrl = { x: cx - 30 * k, y: (baseY + top.y) / 2 };
 
-  // trunk (quadratic bezier), stippled with rings
+  // trunk (quadratic bezier): stippled bark with V-shaped leaf-base scars, like a date palm
   const bez = (t) => ({ x: (1 - t) ** 2 * cx + 2 * (1 - t) * t * ctrl.x + t * t * top.x, y: (1 - t) ** 2 * baseY + 2 * (1 - t) * t * ctrl.y + t * t * top.y });
   const len = baseY - top.y;
-  for (let i = 0; i < len * 3.2; i++) {
-    const t = i / (len * 3.2), p = bez(t), w = (30 - 13 * t) * k;
-    const ring = Math.sin(t * len / (7.5 * k)) ;
-    const n = Math.round(w * 1.25);
-    for (let j = 0; j < n; j++) {
+  const tw = (t) => (28 - 12 * t) * k;
+  for (let i = 0; i < len * 3; i++) {
+    const t = i / (len * 3), p = bez(t), w = tw(t);
+    for (let j = 0; j < w * 1.1; j++) {
       const off = (rnd() - .5) * w, edge = Math.abs(off) / (w / 2);
-      const a = (ring > .82 ? .18 : .62) * (1 - edge * .45) * (.6 + rnd() * .4);
-      dot(p.x + off, p.y + g() * 1.2, a);
+      dot(p.x + off, p.y + g(), .42 * (1 - edge * .5) * (.6 + rnd() * .4));
+    }
+  }
+  const band = 11 * k;
+  for (let yy = 0; yy < len; yy += band) {
+    const t = yy / len, p = bez(t), w = tw(t);
+    for (let s = 0; s < w * 2.2; s++) {
+      const u = s / (w * 2.2), side = u < .5 ? -1 : 1, v = u < .5 ? u * 2 : (u - .5) * 2;
+      dot(p.x + side * (w / 2) * (1 - v), p.y - band * .55 * (1 - v) + g() * .6, .8);
     }
   }
 
-  // fronds
+  // fronds: arching rachis, sparse forward-pointing leaflets that hang with gravity
   const fronds = [];
   const angs = [-172, -155, -140, -124, -108, -94, -80, -64, -48, -32, -16, -4, 10, -186];
-  angs.forEach((deg, i) => {
+  angs.forEach((deg) => {
     const a = deg * Math.PI / 180;
     const side = Math.abs(Math.cos(a));
-    const L = (190 + 95 * side + rnd() * 30) * k * (deg < -186 + 1 ? .8 : 1);
-    const droop = (.12 + .75 * side) * (deg > 0 || deg < -180 ? 1.2 : 1);
+    const hang = deg > 0 || deg < -180;
+    const L = (175 + 105 * side + rnd() * 25) * k * (hang ? .85 : 1);
+    const droop = .22 + .95 * side + (hang ? .35 : 0);
     const pt = (t) => ({ x: top.x + Math.cos(a) * L * t, y: top.y + Math.sin(a) * L * t + droop * L * t * t });
     fronds.push({ deg, pt });
-    // rachis
-    for (let s = 0; s < L * 2.2; s++) { const t = s / (L * 2.2), p = pt(t); const w = (3.2 * (1 - t) + .8) * k; dot(p.x + g() * w, p.y + g() * w, .7); }
-    // leaflets
-    for (let t = .1; t < .99; t += .024) {
-      const p = pt(t), q = pt(t + .01);
-      const tx = q.x - p.x, ty = q.y - p.y, tl = Math.hypot(tx, ty) || 1;
+    const back = deg < -85 && deg > -100;
+    const al = back ? .6 : 1;
+    for (let s = 0; s < L * 2; s++) { const t = s / (L * 2), q = pt(t); const w = (2.6 * (1 - t) + .6) * k; dot(q.x + g() * w * .6, q.y + g() * w * .6, .8 * al); }
+    for (let t = .14; t < .985; t += .03) {
+      const q = pt(t), q2 = pt(t + .01);
+      const tx = q2.x - q.x, ty = q2.y - q.y, tl = Math.hypot(tx, ty) || 1;
       const ux = tx / tl, uy = ty / tl;
-      const ll = L * .2 * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.08)), .65) * (.8 + rnd() * .35);
+      const ll = L * .16 * Math.pow(Math.sin(Math.PI * Math.min(.98, t)), .75) * (.85 + rnd() * .3);
       [-1, 1].forEach((sd) => {
-        const ang = sd * (.95 + rnd() * .2);
+        const ang = sd * (.55 + rnd() * .12);
         let dx = ux * Math.cos(ang) - uy * Math.sin(ang), dy = ux * Math.sin(ang) + uy * Math.cos(ang);
-        dy += .55; const dl = Math.hypot(dx, dy); dx /= dl; dy /= dl;
-        const steps = ll * 1.6;
-        for (let s = 0; s < steps; s++) {
-          const u = s / steps, w = 2.4 * (1 - u) * k;
-          dot(p.x + dx * ll * u + g() * w, p.y + dy * ll * u + dy * u * u * ll * .25 + g() * w, .55 * (1 - u * .5));
+        dy += .3 + .25 * side; const dl = Math.hypot(dx, dy); dx /= dl; dy /= dl;
+        const steps = ll * 1.5;
+        for (let s2 = 0; s2 < steps; s2++) {
+          const u = s2 / steps;
+          dot(q.x + dx * ll * u + g() * .5, q.y + dy * ll * u + u * u * ll * .18 + g() * .5, (.62 - u * .32) * al, 1);
         }
       });
     }
   });
-  // crown cluster
-  for (let i = 0; i < 900 * k; i++) dot(top.x + g() * 14 * k, top.y + g() * 10 * k, .7);
+  // crown and hanging date bunches
+  for (let i = 0; i < 500 * k; i++) dot(top.x + g() * 11 * k, top.y + g() * 8 * k, .75);
+  [-1, 1].forEach((sd) => {
+    const bx = top.x + sd * 16 * k, by = top.y + 14 * k;
+    for (let s = 0; s < 30 * k; s++) dot(bx - sd * s * .25, by - 6 * k + s * .5, .6);
+    for (let i = 0; i < 420 * k; i++) dot(bx + g() * 7 * k, by + 16 * k + Math.abs(g()) * 16 * k, .55, 1.3);
+  });
 
   // grass tufts
   for (let i = 0; i < W / 5; i++) {
