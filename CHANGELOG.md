@@ -8,3 +8,4 @@
 - 2026-11-18 — Living ground: grass sways and bends away from the cursor; glowing flowers reveal lines Moastapha wrote (essay titles, column name, brand lines) with links.
 - 2026-11-19 — Favicon: a tiny grainy date palm on night navy with red dates (SVG + 32px PNG + Apple touch icon), plus a matching browser theme colour.
 - 2026-11-19 — New test version at /keys: piano-key navigation with notes, a light beam and Moastapha's silhouette (main site untouched).
+- 2026-11-19 — /keys phone layout: swipeable full keyboard with readable labels, name moved up, bottom-sheet panel, beam follows the keys while swiping.

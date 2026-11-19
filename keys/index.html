@@ -76,6 +76,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @keyframes eq { from { height: 2px; } to { height: 11px; } }
 .sound { font-size: 12px; color: var(--dim); border: 1px solid var(--hair); border-radius: 999px; padding: 7px 12px; }
 .sound:hover { color: var(--ink); border-color: var(--dim); }
+.fade { display: none; position: absolute; top: 0; right: 0; width: 48px; height: var(--keys-h); background: linear-gradient(90deg, transparent, rgba(4,6,11,.85)); pointer-events: none; z-index: 5; }
+.name .tip { display: none; margin-top: 10px; font-family: var(--display); font-style: italic; font-size: 14px; color: var(--dim); letter-spacing: 0; }
 #yt { position: absolute; width: 1px; height: 1px; left: -9999px; top: 0; }
 body.open .name { opacity: 0; }
 
@@ -152,24 +154,40 @@ body.open .panel { opacity: 1; pointer-events: auto; transform: none; }
 .portrait { width: 100%; max-height: 360px; object-fit: cover; object-position: center 20%; border-radius: 4px; margin-bottom: 20px; }
 
 @media (max-width: 720px) {
-  :root { --keys-h: 170px; }
-  .w { font-size: 8.5px; letter-spacing: .08em; padding-bottom: 10px; }
-  .w:not([data-id]) { display: none; }
-  .b { display: none; }
-  .name { right: 20px; bottom: 86px; }
-  .dock { left: 16px; right: 16px; bottom: 20px; justify-content: space-between; }
-  .prompt { font-size: 13px; }
-  .me { height: 24vh; }
-  .panel { left: 10px !important; right: 10px; width: auto; top: auto; height: 64%; bottom: 10px; }
-  .panel-inner { padding: 22px 20px 40px; }
+  :root { --keys-h: 168px; }
+  .keys { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+  .keys::-webkit-scrollbar { display: none; }
+  .w { flex: 0 0 76px; font-size: 10.5px; letter-spacing: .1em; padding: 0 4px 14px; }
+  .fade { display: block; }
+  .name { left: 20px; right: 20px; top: calc(var(--keys-h) + 22px); bottom: auto; text-align: left; }
+  .name h1 { font-size: 32px; }
+  .name p { font-size: 12.5px; }
+  .name .tip { display: block; }
+  .prompt { display: none; }
+  .me { height: 25vh; bottom: 74px; }
+  .floor { display: none; }
+  .beam { opacity: .82; }
+  .name h1, .name p { text-shadow: 0 0 3px rgba(11,15,25,.95), 0 0 10px rgba(11,15,25,.95), 0 0 22px rgba(11,15,25,.8); }
+  .me { -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent); }
+  .dock { left: 14px; right: 14px; bottom: 16px; justify-content: space-between; }
+  .pill { font-size: 12px; }
+  .whisper { left: 14px !important; right: 14px; max-width: none; }
+  .panel { left: 0 !important; right: 0; width: auto; top: auto; height: 82%; bottom: 0; border-radius: 16px 16px 0 0; border-bottom: 0; transform: translateY(30px); }
+  .panel-inner { padding: 18px 20px 48px; }
+  .panel-inner::before { content: ""; display: block; width: 42px; height: 4px; border-radius: 2px; background: var(--hair); margin: 0 auto 14px; }
+  .close { width: 40px; height: 40px; font-size: 20px; margin: -4px -6px 0 0; }
+  .panel h2 { font-size: 28px; }
+  .panel p, .panel ul { font-size: 15px; }
   .split, .touch, .stats { grid-template-columns: 1fr; }
   .snap { grid-template-columns: 1fr; }
+  .essay .ar { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .beam, .halo, .me, .prompt, .panel { transition: none; } .beam.drop { animation: none; } }
 </style>
 </head>
 <body>
 <div class="keys" id="keys" role="navigation" aria-label="Piano keys: each key opens a section"></div>
+<div class="fade" aria-hidden="true"></div>
 <div class="room" id="room">
   <div class="halo" id="halo"></div>
   <div class="beam" id="beam"></div>
@@ -177,7 +195,7 @@ body.open .panel { opacity: 1; pointer-events: auto; transform: none; }
   <div class="floor"></div>
   <div class="prompt" id="prompt">every key opens a room. press one.</div>
 </div>
-<div class="name"><h1>Moastapha <em>Al-Qaraani</em></h1><p>Content Manager &amp; Strategist · Riyadh</p></div>
+<div class="name"><h1>Moastapha <em>Al-Qaraani</em></h1><p>Content Manager &amp; Strategist · Riyadh</p><p class="tip">swipe the keys, tap one →</p></div>
 <div class="dock">
   <div class="pill" id="player">
     <button type="button" id="play" aria-label="Play Mount Everest by Labrinth"><svg id="ico" width="11" height="12" viewBox="0 0 11 12" aria-hidden="true"><path d="M1 1l9 5-9 5z" fill="currentColor"/></svg></button>
@@ -391,7 +409,7 @@ function placeBlacks() {
     if (i >= whites.length - 1 || !BLACK_AFTER[i % 7]) return;
     const r = w.getBoundingClientRect(), bw = r.width * .58;
     const b = document.createElement("button");
-    b.type = "button"; b.className = "b"; b.style.left = (r.right - kr.left + 1.5 - bw / 2) + "px"; b.style.width = bw + "px";
+    b.type = "button"; b.className = "b"; b.style.left = (r.right - kr.left + keysEl.scrollLeft + 1.5 - bw / 2) + "px"; b.style.width = bw + "px";
     b.dataset.semi = semiOfWhite(i) + 1;
     const e = ESSAYS[essayIdx++ % ESSAYS.length]; b.dataset.essay = essayIdx - 1;
     b.setAttribute("aria-label", "Essay: " + e[0]);
@@ -423,7 +441,7 @@ soundBtn.addEventListener("click", () => { soundOn = !soundOn; soundBtn.textCont
 // ---------- beam, me, panel ----------
 const beam = document.getElementById("beam"), halo = document.getElementById("halo"), me = document.getElementById("me"), prompt = document.getElementById("prompt");
 const panel = document.getElementById("panel"), content = document.getElementById("content"), whisper = document.getElementById("whisper");
-let litIndex = innerWidth <= 720 ? 1 : 6, current = null;
+let litIndex = innerWidth <= 720 ? 2 : 6, current = null;
 function lightKey(i, animate) {
   litIndex = i;
   whites.forEach((w, j) => w.classList.toggle("lit", j === i));
@@ -447,6 +465,7 @@ function placePanel(x, w) {
 function open(id, fromHash) {
   if (!S[id]) return;
   const i = whites.findIndex((w) => w.dataset.id === id);
+  if (innerWidth <= 720) { const r = whites[i].getBoundingClientRect(); if (r.left < 0 || r.right > innerWidth) keysEl.scrollLeft += r.left - innerWidth / 2 + r.width / 2; }
   const { x, w } = lightKey(i, true);
   current = id; content.innerHTML = S[id].html; panel.scrollTop = 0;
   placePanel(x, w);
@@ -498,6 +517,15 @@ playBtn.addEventListener("click", () => {
   if (!ytReady) { wantPlay = true; setOn(true); if (!document.getElementById("yt-api")) { const t = document.createElement("script"); t.id = "yt-api"; t.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(t); } return; }
   const st = yt.getPlayerState(); if (st === 1 || st === 3) yt.pauseVideo(); else yt.playVideo();
 });
+
+// keep the beam under its key while the keys scroll (phones)
+let st;
+keysEl.addEventListener("scroll", () => {
+  [beam, halo, me].forEach((el) => (el.style.transition = "none"));
+  lightKey(litIndex, false);
+  clearTimeout(st); st = setTimeout(() => [beam, halo, me].forEach((el) => (el.style.transition = "")), 120);
+  if (!whisper.hidden) hideWhisper();
+}, { passive: true });
 
 // ---------- layout ----------
 function layout() {
