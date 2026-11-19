@@ -6,3 +6,4 @@
 - 2026-11-18 — Arabic writing: added all 16 Kitabh essays (حوار داخلي) with links, most-read highlighted; brand lines kept below; Kitabh linked from "me".
 - 2026-11-18 — Night navy background; palm redrawn as a real date palm (arching fronds, sparse leaflets, leaf-base scars on the trunk, hanging date bunches); label legibility; refreshed preview image.
 - 2026-11-18 — Living ground: grass sways and bends away from the cursor; glowing flowers reveal lines Moastapha wrote (essay titles, column name, brand lines) with links.
+- 2026-11-19 — Favicon: a tiny grainy date palm on night navy with red dates (SVG + 32px PNG + Apple touch icon), plus a matching browser theme colour.
