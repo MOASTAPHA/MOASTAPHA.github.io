@@ -7,3 +7,4 @@
 - 2026-11-18 — Night navy background; palm redrawn as a real date palm (arching fronds, sparse leaflets, leaf-base scars on the trunk, hanging date bunches); label legibility; refreshed preview image.
 - 2026-11-18 — Living ground: grass sways and bends away from the cursor; glowing flowers reveal lines Moastapha wrote (essay titles, column name, brand lines) with links.
 - 2026-11-19 — Favicon: a tiny grainy date palm on night navy with red dates (SVG + 32px PNG + Apple touch icon), plus a matching browser theme colour.
+- 2026-11-19 — New test version at /keys: piano-key navigation with notes, a light beam and Moastapha's silhouette (main site untouched).
