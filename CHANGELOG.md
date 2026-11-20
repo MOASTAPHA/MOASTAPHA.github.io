@@ -10,3 +10,4 @@
 - 2026-11-19 — New test version at /keys: piano-key navigation with notes, a light beam and Moastapha's silhouette (main site untouched).
 - 2026-11-19 — /keys phone layout: swipeable full keyboard with readable labels, name moved up, bottom-sheet panel, beam follows the keys while swiping.
 - 2026-11-20 — Gentle wind: the palm's crown now sways a fraction of a degree in a slow, irregular breeze (GPU-only, pauses while a panel is open, off with reduced motion).
+- 2026-11-21 — Hover preview: hovering or focusing a frond label softly brightens that frond on the canvas (it stays lit while its panel is open; sways with the wind, no extra animation loop).

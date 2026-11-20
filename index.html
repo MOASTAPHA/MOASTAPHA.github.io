@@ -172,10 +172,13 @@ body.open .panel { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) { .scene, .panel { transition: none; } }
 /* gentle wind: the crown layer sways a fraction of a degree around the top of the trunk (GPU-composited, no redraws) */
-#f { animation: wind 11s ease-in-out infinite; will-change: transform; }
+#f, #h { animation: wind 11s ease-in-out infinite; will-change: transform; }
+/* hover preview: the frond behind a hovered/focused label brightens slightly (#h sways with #f) */
+#h { opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+#h.lit { opacity: 1; }
 @keyframes wind { 0%, 100% { transform: rotate(0deg); } 22% { transform: rotate(.55deg); } 40% { transform: rotate(.15deg); } 63% { transform: rotate(.7deg); } 82% { transform: rotate(-.15deg); } }
-body.open #f { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) { #f { animation: none; } }
+body.open #f, body.open #h { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { #f, #h { animation: none; } #h { transition: none; } }
 </style>
 </head>
 <body>
@@ -183,6 +186,7 @@ body.open #f { animation-play-state: paused; }
   <div class="scene" id="scene">
     <canvas id="c" aria-hidden="true"></canvas>
     <canvas id="f" aria-hidden="true"></canvas>
+    <canvas id="h" aria-hidden="true"></canvas>
     <canvas id="g" aria-hidden="true"></canvas>
     <div id="flowers" aria-label="Glowing flowers: lines I wrote"></div>
     <svg class="lines" id="lines" aria-hidden="true"></svg>
@@ -379,6 +383,8 @@ const S = {
 // ---------- palm drawing ----------
 const cv = document.getElementById("c"), ctx = cv.getContext("2d");
 const fcv = document.getElementById("f"), fctx = fcv.getContext("2d");
+const hcv = document.getElementById("h"), hctx = hcv.getContext("2d");
+let litId = null;
 const linesSvg = document.getElementById("lines"), tagsEl = document.getElementById("tags");
 let W = 0, H = 0, anchors = {}, blades = [], groundY = 0, trunkX = 0, flowers = [];
 
@@ -394,7 +400,8 @@ function draw() {
   const rnd = mulberry32(11);
   const g = () => (rnd() + rnd() + rnd() - 1.5) / 1.5; // soft gaussian
   const INK = "214,213,208";
-  const dot = (x, y, a, s = 1.1) => { dc.fillStyle = `rgba(${INK},${a})`; dc.fillRect(x, y, s, s); };
+  let rec = null; // when set, frond dots are also recorded so the hover preview can re-draw them brighter
+  const dot = (x, y, a, s = 1.1) => { dc.fillStyle = `rgba(${INK},${a})`; dc.fillRect(x, y, s, s); if (rec) rec.push(x, y, a, s); };
 
   // sky specks
   for (let i = 0; i < W * H / 2600; i++) dot(rnd() * W, rnd() * H, rnd() * .35, rnd() < .1 ? 1.6 : 1);
@@ -427,7 +434,8 @@ function draw() {
 
   // fronds: arching rachis, sparse forward-pointing leaflets that hang with gravity
   const fronds = [];
-  dc = fctx; fcv.style.transformOrigin = `${top.x}px ${top.y + 6 * k}px`;
+  dc = fctx; fcv.style.transformOrigin = hcv.style.transformOrigin = `${top.x}px ${top.y + 6 * k}px`;
+  hcv.width = W * dpr; hcv.height = H * dpr; hctx.setTransform(dpr, 0, 0, dpr, 0, 0); hcv.classList.remove("lit"); litId = null;
   const angs = [-172, -155, -140, -124, -108, -94, -80, -64, -48, -32, -16, -4, 10, -186];
   angs.forEach((deg) => {
     const a = deg * Math.PI / 180;
@@ -436,7 +444,8 @@ function draw() {
     const L = (175 + 105 * side + rnd() * 25) * k * (hang ? .85 : 1);
     const droop = .22 + .95 * side + (hang ? .35 : 0);
     const pt = (t) => ({ x: top.x + Math.cos(a) * L * t, y: top.y + Math.sin(a) * L * t + droop * L * t * t });
-    fronds.push({ deg, pt });
+    rec = [];
+    fronds.push({ deg, pt, dots: rec });
     const back = deg < -85 && deg > -100;
     const al = back ? .6 : 1;
     for (let s = 0; s < L * 2; s++) { const t = s / (L * 2), q = pt(t); const w = (2.6 * (1 - t) + .6) * k; dot(q.x + g() * w * .6, q.y + g() * w * .6, .8 * al); }
@@ -457,6 +466,7 @@ function draw() {
       });
     }
   });
+  rec = null;
   // crown and hanging date bunches
   for (let i = 0; i < 500 * k; i++) dot(top.x + g() * 11 * k, top.y + g() * 8 * k, .75);
   [-1, 1].forEach((sd) => {
@@ -491,6 +501,24 @@ function draw() {
   anchors.contact = { p: { x: cx - 16 * k, y: baseY - 60 * k }, side: "left", far: true };
   placeTags(k);
 }
+
+// hover preview: re-draw the label's frond on #h with a soft brightening, then fade #h in
+function lightFrond(id) {
+  const o = id && anchors[id];
+  if (!o || !o.f) { hcv.classList.remove("lit"); litId = null; return; }
+  if (litId !== id) {
+    hctx.clearRect(0, 0, W, H);
+    const d = o.f.dots;
+    for (let i = 0; i < d.length; i += 4) { hctx.fillStyle = `rgba(246,243,236,${Math.min(.55, d[i + 2] * .7)})`; hctx.fillRect(d[i], d[i + 1], d[i + 3], d[i + 3]); }
+    litId = id;
+  }
+  hcv.classList.add("lit");
+}
+const tagOf = (e) => { const t = e.target.closest && e.target.closest(".tag"); return t ? t.dataset.open : null; };
+tagsEl.addEventListener("pointerover", (e) => { const id = tagOf(e); if (id && e.pointerType !== "touch") lightFrond(id); });
+tagsEl.addEventListener("pointerout", (e) => { if (tagOf(e) && !e.relatedTarget?.closest?.(".tag")) lightFrond(current); });
+tagsEl.addEventListener("focusin", (e) => { const id = tagOf(e); if (id) lightFrond(id); });
+tagsEl.addEventListener("focusout", () => lightFrond(current));
 
 function placeTags(k) {
   linesSvg.innerHTML = ""; tagsEl.innerHTML = "";
@@ -601,6 +629,7 @@ let current = null;
 function open(id, fromHash) {
   if (!S[id]) return;
   current = id;
+  lightFrond(id);
   content.innerHTML = S[id].html;
   document.body.classList.add("open");
   document.querySelectorAll(".tag").forEach((t) => t.setAttribute("aria-current", t.dataset.open === id ? "true" : "false"));
@@ -616,6 +645,7 @@ function open(id, fromHash) {
 function close() {
   if (!current) return;
   const was = current; current = null;
+  lightFrond(null);
   document.body.classList.remove("open");
   scene.style.transform = "";
   document.querySelectorAll(".tag").forEach((t) => t.removeAttribute("aria-current"));

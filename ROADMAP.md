@@ -7,7 +7,7 @@ Only Moastapha adds items about his career content. Never invent facts, numbers,
 - [x] Link previews: add Open Graph / Twitter meta (title, description) and a 1200x630 og-image.jpg generated from the palm scene, so the link looks good on WhatsApp, LinkedIn and X
 - [x] Favicon: a tiny grainy palm (SVG + 32px PNG) in the site's palette
 - [x] Gentle wind: slow, subtle sway of the fronds (respect prefers-reduced-motion; keep CPU low)
-- [ ] Hover preview: hovering a frond label slightly brightens that frond on the canvas
+- [x] Hover preview: hovering a frond label slightly brightens that frond on the canvas
 - [ ] Sky by Riyadh time: night sky after sunset, dusk tones near sunset, soft dawn in the morning (Asia/Riyadh clock)
 - [ ] Rare shooting star across the sky every ~40–60 s
 - [ ] Keyboard: arrow keys move between fronds; Enter opens; Esc returns (already) — make focus order follow the palm
