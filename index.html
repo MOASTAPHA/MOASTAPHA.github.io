@@ -208,10 +208,10 @@ body.open #f, body.open #h { animation-play-state: paused; }
   <div class="note">
     <span>maybe you'll know me better if you listen to what I like</span>
     <div class="player" id="player">
-      <button type="button" id="play" aria-label="Play Mount Everest by Labrinth"><svg id="ico" width="11" height="12" viewBox="0 0 11 12" aria-hidden="true"><path d="M1 1l9 5-9 5z" fill="currentColor"/></svg></button>
+      <button type="button" id="play" aria-label="Play That's Life by Frank Sinatra"><svg id="ico" width="11" height="12" viewBox="0 0 11 12" aria-hidden="true"><path d="M1 1l9 5-9 5z" fill="currentColor"/></svg></button>
       <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span class="track">mount everest · labrinth</span>
-      <a href="https://www.youtube.com/watch?v=kwrYDTHKxiE" target="_blank" rel="noopener" aria-label="Open on YouTube">↗</a>
+      <span class="track">that's life · frank sinatra</span>
+      <a href="https://www.youtube.com/watch?v=UCENTf_LWYA" target="_blank" rel="noopener" aria-label="Open on YouTube">↗</a>
     </div>
     <div id="yt" aria-hidden="true"></div>
   </div>
@@ -384,6 +384,7 @@ const S = {
     <p class="what">Based in Riyadh. Open to content leadership roles and strategy projects.</p>
     <div class="contact">
       <div><small>Email</small><span class="val">moastapha-qaraani@outlook.com</span><button type="button" data-copy="moastapha-qaraani@outlook.com">copy</button></div>
+      <div><small>LinkedIn</small><span class="val">moastapha-al-qaraani</span><a class="btn" href="https://www.linkedin.com/in/moastapha-al-qaraani-96aa62248" target="_blank" rel="noopener">open ↗</a></div>
       <div><small>Phone</small><span class="val">+966 57 587 4319</span><button type="button" data-copy="+966575874319">copy</button><a class="btn" href="https://wa.me/966575874319">WhatsApp ↗</a></div>
       <div><small>CV</small><span class="val">One-page CV (PDF)</span><a class="btn" href="/Moastapha-Al-Qaraani-CV.pdf" download>Download ↓</a></div>
     </div>` },
@@ -705,13 +706,13 @@ window.addEventListener("hashchange", () => { const h = location.hash.slice(1); 
 let yt = null, ytReady = false, wantPlay = false;
 const playerEl = document.getElementById("player"), ico = document.getElementById("ico"), playBtn = document.getElementById("play");
 const PLAY = '<path d="M1 1l9 5-9 5z" fill="currentColor"/>', PAUSE = '<path d="M1 1h3v10H1zM7 1h3v10H7z" fill="currentColor"/>';
-function setOn(on) { playerEl.classList.toggle("on", on); ico.innerHTML = on ? PAUSE : PLAY; playBtn.setAttribute("aria-label", (on ? "Pause" : "Play") + " Mount Everest by Labrinth"); }
+function setOn(on) { playerEl.classList.toggle("on", on); ico.innerHTML = on ? PAUSE : PLAY; playBtn.setAttribute("aria-label", (on ? "Pause" : "Play") + " That's Life by Frank Sinatra"); }
 window.onYouTubeIframeAPIReady = () => {
-  yt = new YT.Player("yt", { width: 1, height: 1, videoId: "kwrYDTHKxiE", playerVars: { playsinline: 1, controls: 0 },
+  yt = new YT.Player("yt", { width: 1, height: 1, videoId: "UCENTf_LWYA", playerVars: { playsinline: 1, controls: 0 },
     events: {
       onReady: () => { ytReady = true; yt.setVolume(70); if (wantPlay) yt.playVideo(); },
       onStateChange: (e) => setOn(e.data === 1 || e.data === 3),
-      onError: () => { setOn(false); window.open("https://www.youtube.com/watch?v=kwrYDTHKxiE", "_blank", "noopener"); },
+      onError: () => { setOn(false); window.open("https://www.youtube.com/watch?v=UCENTf_LWYA", "_blank", "noopener"); },
     } });
 };
 function loadYT() { if (document.getElementById("yt-api")) return; const t = document.createElement("script"); t.id = "yt-api"; t.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(t); }
