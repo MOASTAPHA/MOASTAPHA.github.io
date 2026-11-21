@@ -21,3 +21,5 @@ Only Moastapha adds items about his career content. Never invent facts, numbers,
 - Verified results/numbers for AWAL, FG Sports, Prime Ticket case studies
 - His own Arabic writing samples to replace the placeholders
 - Custom domain
+
+- [ ] Add a "the work" frond to the palm site using the same files as /keys/#work (images in /work/*.jpg, card text in keys/index.html, section "work"). Credit everything to Moastapha; note "full files on request".

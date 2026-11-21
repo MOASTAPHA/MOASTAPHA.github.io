@@ -183,6 +183,25 @@ body.open .panel { opacity: 1; pointer-events: auto; transform: none; }
   .essay .ar { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .beam, .halo, .me, .prompt, .panel { transition: none; } .beam.drop { animation: none; } }
+
+.panel .wgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.wcard { display: flex; flex-direction: column; text-align: left; background: rgba(255,255,255,.035); border: 1px solid var(--hair); border-radius: 6px; overflow: hidden; transition: border-color .25s, transform .25s; }
+.wcard:hover, .wcard:focus-visible { border-color: var(--accent); transform: translateY(-2px); }
+.wcard img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; border-bottom: 1px solid var(--hair); }
+.wcard span { padding: 0 12px; }
+.wcard .wb { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-top: 11px; }
+.wcard .wt { font-size: 14px; color: var(--ink); line-height: 1.35; margin: 4px 0 2px; }
+.wcard .wp { font-size: 11px; color: var(--dim); margin-bottom: 8px; }
+.wcard .wd { font-size: 12.5px; color: var(--dim); line-height: 1.5; }
+.wcard .ws { font-size: 12.5px; color: var(--ink); line-height: 1.45; margin: 8px 0 12px; font-style: italic; opacity: .85; }
+.note-req { font-size: 12px; color: var(--dim); margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--hair); }
+.lb { position: fixed; inset: 0; z-index: 50; background: rgba(6,9,16,.95); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px; }
+.lb[hidden] { display: none; }
+.lb img { max-width: min(1280px, 94vw); max-height: 78vh; border-radius: 4px; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+.lb .lbbar { display: flex; gap: 10px; align-items: center; color: var(--dim); font-size: 12.5px; }
+.lb button { border: 1px solid var(--hair); border-radius: 999px; padding: 7px 14px; color: var(--ink); font-size: 13px; }
+.lb button:hover { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 720px) { .panel .wgrid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -206,6 +225,7 @@ body.open .panel { opacity: 1; pointer-events: auto; transform: none; }
   <button type="button" class="sound" id="sound" aria-pressed="true">♪ keys on</button>
   <div id="yt" aria-hidden="true"></div>
 </div>
+<div class="lb" id="lb" role="dialog" aria-label="File pages" hidden><img id="lbimg" alt=""><div class="lbbar"><button type="button" id="lbprev" aria-label="Previous page">←</button><span id="lbcount"></span><button type="button" id="lbnext" aria-label="Next page">→</button><button type="button" id="lbclose">close</button></div></div>
 <div class="whisper" id="whisper" role="status" hidden></div>
 <aside class="panel" id="panel" aria-label="Section details">
   <div class="panel-inner"><button class="close" id="close" type="button" aria-label="Close">×</button><div id="content"></div></div>
@@ -246,6 +266,7 @@ const S = {
     <h3>The outcome</h3>
     <ul><li>Launched with one consistent voice across website, social, film and gift cards</li><li>A permanent strategy now guides the brand team and its agencies</li></ul>
     <h3>Who did what</h3>
+    <p><button type="button" class="more-link" data-open="work">See the AWAL strategy pages →</button></p>
     <div class="split"><div><b>My call</b><p>The core idea and its rules, the bilingual voice, posting cadence, content ratio and every defining line.</p></div><div><b>The team's execution</b><p>Shoots by the production partner, visuals by the design team, captions by the brand's writer under my review.</p></div></div>` },
 
   "fg-sports": { label: "FG Sports", sub: "case study · sports business", html: `
@@ -274,6 +295,7 @@ const S = {
     <h3>The outcome</h3>
     <ul><li>A distinct B2B voice that filters every trend through a strategist's lens</li><li>Recurring series that give the account a predictable, ownable rhythm</li></ul>
     <h3>Who did what</h3>
+    <p><button type="button" class="more-link" data-open="work">See the FG quarterly frameworks →</button></p>
     <div class="split"><div><b>My call</b><p>B2B positioning, the pillar-and-column model, series formats, the yearly plan and the FG Fantasy concept.</p></div><div><b>The team's execution</b><p>Drafting by the brand's writer, design by the design team, field interviews by the production crew.</p></div></div>` },
 
   "prime-ticket": { label: "Prime Ticket", sub: "case study · ticketing", html: `
@@ -335,6 +357,30 @@ const S = {
     <div class="quote"><span class="ar">حلا لكل جمعاتكم</span><div class="meta"><b>RIYD</b>Brand umbrella for families and friends in Riyadh. Warm Gulf dialect: the brand belongs at the gathering.</div></div>
     <div class="quote"><span class="ar">نفس الفكرة.. بس جَم.</span><div class="meta"><b>JMM</b>Homepage headline for founders and marketing directors. Confident and witty: the agency's name does the work.</div></div>` },
 
+  work: { label: "the work", sub: "strategies & files", html: `
+    <p class="kicker">The work</p>
+    <h2>The files behind the brands</h2>
+    <p class="what">Strategies, website concepts, campaign scripts and proposals I wrote. A few pages from each — full files on request.</p>
+<h3>Strategy & communication</h3><div class="wgrid">
+<button type="button" class="wcard" data-gallery="awal-strategy"><img src="../work/as3.jpg" alt="AWAL: Content strategy" loading="lazy"><span class="wb">AWAL</span><span class="wt">Content strategy</span><span class="wp">43 pages · view 3 pages</span><span class="wd">From content-making to brand-building: audit, audience, benchmarking, objectives, positioning, key messages, pillars, editorial direction and measurement.</span><span class="ws">A three-question test every line must pass: could it belong to another brand? does it explain or justify? was it written in one language and moved to another?</span></button>
+<button type="button" class="wcard" data-gallery="awal-visual"><img src="../work/av6.jpg" alt="AWAL: Visual & content direction" loading="lazy"><span class="wb">AWAL</span><span class="wt">Visual & content direction</span><span class="wp">15 pages · view 3 pages</span><span class="wd">The brand's visual fingerprint: five shooting rules, compositions drawn from the letters of the logo, platform roles and the Coming Soon film idea.</span><span class="ws">Strategy that reaches the camera — the photographer and designers get rules, not adjectives.</span></button>
+<button type="button" class="wcard" data-gallery="fg-q2"><img src="../work/fg3.jpg" alt="FG Sports: Quarterly content framework · Apr–Jun 2026" loading="lazy"><span class="wb">FG Sports</span><span class="wt">Quarterly content framework · Apr–Jun 2026</span><span class="wp">29 pages · view 2 pages</span><span class="wd">Content tied to business goals for a B2B audience: pillars, monthly objectives, weekly distribution, an approval workflow and KPI tracking.</span><span class="ws">How content turns into commercial conversations for a consulting firm.</span></button>
+<button type="button" class="wcard" data-gallery="fg-q4"><img src="../work/fq2.jpg" alt="FG Sports: Quarterly content framework · Nov 2026–Jan 2027" loading="lazy"><span class="wb">FG Sports</span><span class="wt">Quarterly content framework · Nov 2026–Jan 2027</span><span class="wp">19 pages · view 2 pages</span><span class="wd">Monthly objectives built on sponsorship and commercial expertise, with a per-platform publishing plan across Instagram, LinkedIn, X, TikTok and email.</span><span class="ws">The yearly direction broken into months, platforms and post counts the team can deliver.</span></button>
+</div>
+<h3>Websites</h3><div class="wgrid">
+<button type="button" class="wcard" data-gallery="awal-site"><img src="../work/ws19.jpg" alt="AWAL: Website structure & copy" loading="lazy"><span class="wb">AWAL</span><span class="wt">Website structure & copy</span><span class="wp">23 pages · view 2 pages</span><span class="wd">Sitemap, motion language, homepage blocks, the About page text, the product-page structure and the three moments where the slogan is allowed to appear.</span><span class="ws">A site written as one voice — down to the order confirmation screen.</span></button>
+<button type="button" class="wcard" data-gallery="datalin"><img src="../work/dt5.jpg" alt="Datalin: Website concept" loading="lazy"><span class="wb">Datalin</span><span class="wt">Website concept</span><span class="wp">9 pages · view 2 pages</span><span class="wd">A client with no numbers and no projects to show. The concept turns that absence into the pitch: The world's best AI wasn't built for here. We make it fit.</span><span class="ws">Finding the one idea that makes a whole site hold together.</span></button>
+</div>
+<h3>Campaigns & creative</h3><div class="wgrid">
+<button type="button" class="wcard" data-gallery="ahli"><img src="../work/al6.jpg" alt="Al-Ahli Saudi Club: World Children's Day pitch · Where It All Begins" loading="lazy"><span class="wb">Al-Ahli Saudi Club</span><span class="wt">World Children's Day pitch · Where It All Begins</span><span class="wp">19 pages · view 3 pages</span><span class="wd">One creative umbrella, three routes — a legacy of love, an unexpected ride, future stars — with content ideas, visual direction and lines for each.</span><span class="ws">A campaign platform that can renew every year, not a one-day post.</span></button>
+<button type="button" class="wcard" data-gallery="national-day"><img src="../work/nd4.jpg" alt="FG Sports: National Day 2026 film · كبرت الحصّة!" loading="lazy"><span class="wb">FG Sports</span><span class="wt">National Day 2026 film · كبرت الحصّة!</span><span class="wp">14 pages · view 3 pages</span><span class="wd">A collage film from the school PE lesson to today's sports industry, written as a six-scene voice-over script.</span><span class="ws">Turning a national moment into the brand's own story: sport as a career and an investment.</span></button>
+<button type="button" class="wcard" data-gallery="awal-shoot"><img src="../work/sd1.jpg" alt="AWAL: Shoot moodboard & styling direction" loading="lazy"><span class="wb">AWAL</span><span class="wt">Shoot moodboard & styling direction</span><span class="wp">13 + 26 pages · view 2 pages</span><span class="wd">Locations, compositions and film mood for the shoot, and the styling direction for the Lama Alakeel × Jamal AlSaleh photoshoot.</span><span class="ws">Brand rules carried into a real production day.</span></button>
+</div>
+<h3>Brands & proposals</h3><div class="wgrid">
+<button type="button" class="wcard" data-gallery="krt-akhdar"><img src="../work/gc1.jpg" alt="Krt Akhdar | كرت أخضر: Podcast positioning & guest deck" loading="lazy"><span class="wb">Krt Akhdar | كرت أخضر</span><span class="wt">Podcast positioning & guest deck</span><span class="wp">19 pages · view 1 page</span><span class="wd">A sports-business podcast: positioning, editorial principles, audience, the guest journey and a first season of 12 episodes.</span><span class="ws">Building a media brand around depth, not noise.</span></button>
+<button type="button" class="wcard" data-gallery="pearls"><img src="../work/pr4.jpg" alt="Pearls clinics: Marketing proposal" loading="lazy"><span class="wb">Pearls clinics</span><span class="wt">Marketing proposal</span><span class="wp">19 pages · view 2 pages</span><span class="wd">Account clean-up and content filtering for a medical brand, rebuilt highlights, three activation campaigns and story-led influencer content.</span><span class="ws">Trust first: less selling, more reasons to book.</span></button>
+</div>
+    <p class="note-req">Client files are shown in part. Full documents are shared on request, with the client's permission.</p>` },
   me: { label: "me", sub: "who's behind this", html: `
     <p class="kicker">About</p>
     <h2>Strategy is only real when a team can deliver it every week</h2>
@@ -377,7 +423,7 @@ const S = {
 };
 
 // ---------- keyboard layout ----------
-const WHITE = ["", "me", "", "awal", "", "fg-sports", "", "prime-ticket", "", "more-brands", "", "lead", "", "writing", "", "contact", ""];
+const WHITE = ["", "me", "", "awal", "", "fg-sports", "", "prime-ticket", "", "more-brands", "", "work", "", "lead", "", "writing", "", "contact", ""];
 const BLACK_AFTER = [1, 1, 0, 1, 1, 1, 0]; // C D E F G A B: black key after C, D, F, G, A
 const K = "https://kitabh.com";
 const ESSAYS = [
@@ -539,6 +585,19 @@ me.addEventListener("load", layout);
 (document.fonts ? document.fonts.ready : Promise.resolve()).then(layout);
 layout();
 const h0 = location.hash.slice(1); if (S[h0]) setTimeout(() => open(h0, true), 50);
+const GAL = {"awal-strategy": ["as3", "as22", "as31"], "awal-visual": ["av6", "av5", "av1"], "fg-q2": ["fg3", "fg1"], "fg-q4": ["fq2", "fq1"], "awal-site": ["ws19", "ws1"], "datalin": ["dt5", "dt1"], "ahli": ["al6", "al9", "al1"], "national-day": ["nd4", "nd3", "nd1"], "awal-shoot": ["sd1", "mb1"], "krt-akhdar": ["gc1"], "pearls": ["pr4", "pr1"]};
+const lb = document.getElementById("lb"), lbimg = document.getElementById("lbimg"), lbcount = document.getElementById("lbcount");
+let gal = null, gi = 0;
+function showGal() { lbimg.src = "../work/" + gal[gi] + ".jpg"; lbcount.textContent = (gi + 1) + " / " + gal.length; lbimg.alt = "Page " + (gi + 1); }
+function openGal(id) { gal = GAL[id]; gi = 0; showGal(); lb.hidden = false; note(semiOfWhite(11) + 7, .2); }
+function stepGal(d) { if (!gal) return; gi = (gi + d + gal.length) % gal.length; showGal(); note(semiOfWhite(11) + 7 + gi * 2, .15); }
+function closeGal() { lb.hidden = true; gal = null; }
+document.getElementById("lbprev").addEventListener("click", (e) => { e.stopPropagation(); stepGal(-1); });
+document.getElementById("lbnext").addEventListener("click", (e) => { e.stopPropagation(); stepGal(1); });
+document.getElementById("lbclose").addEventListener("click", closeGal);
+lb.addEventListener("click", (e) => { if (e.target === lb) closeGal(); });
+document.addEventListener("click", (e) => { const g = e.target.closest("[data-gallery]"); if (g && GAL[g.dataset.gallery]) openGal(g.dataset.gallery); });
+document.addEventListener("keydown", (e) => { if (lb.hidden) return; if (e.key === "ArrowRight") stepGal(1); if (e.key === "ArrowLeft") stepGal(-1); if (e.key === "Escape") { e.stopImmediatePropagation(); closeGal(); } }, true);
 </script>
 </body>
 </html>
