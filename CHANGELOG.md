@@ -11,3 +11,4 @@
 - 2026-11-19 — /keys phone layout: swipeable full keyboard with readable labels, name moved up, bottom-sheet panel, beam follows the keys while swiping.
 - 2026-11-20 — Gentle wind: the palm's crown now sways a fraction of a degree in a slow, irregular breeze (GPU-only, pauses while a panel is open, off with reduced motion).
 - 2026-11-21 — Hover preview: hovering or focusing a frond label softly brightens that frond on the canvas (it stays lit while its panel is open; sways with the wind, no extra animation loop).
+- 2026-11-21 — Sky by Riyadh time: the night sky now shifts with the Riyadh clock — soft dawn around sunrise, a slightly lifted sky by day, warm dusk near sunset, deep night after (sunrise/sunset computed for Riyadh; preview with ?sky=dawn|day|dusk|night).

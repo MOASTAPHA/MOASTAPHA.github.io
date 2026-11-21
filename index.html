@@ -45,7 +45,14 @@ body { background: var(--night-deep); color: var(--ink); font-family: var(--body
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
 :focus-visible { outline: 1px dashed var(--accent); outline-offset: 4px; }
 
-.frame { position: fixed; inset: 10px; background: var(--night); border-radius: 6px; overflow: hidden; box-shadow: inset 0 0 120px rgba(0,0,0,.55); }
+.frame { --dawn: 0; --day: 0; --dusk: 0; position: fixed; inset: 10px; background:
+    /* sky by Riyadh time: each layer fades in with its share of the hour (set by JS; all 0 = plain night) */
+    radial-gradient(120% 55% at 50% 100%, rgba(232,87,63,calc(.2 * var(--dusk))), transparent 70%),
+    linear-gradient(to bottom, rgba(74,52,86,calc(.32 * var(--dusk))), transparent 60%),
+    radial-gradient(120% 50% at 50% 100%, rgba(236,176,140,calc(.18 * var(--dawn))), transparent 70%),
+    linear-gradient(to bottom, rgba(70,92,128,calc(.34 * var(--dawn))), transparent 65%),
+    linear-gradient(to bottom, rgba(58,74,104,calc(.4 * var(--day))), rgba(58,74,104,calc(.12 * var(--day)))),
+    var(--night); border-radius: 6px; overflow: hidden; box-shadow: inset 0 0 120px rgba(0,0,0,.55); }
 .scene { position: absolute; inset: 0; transition: transform 1.1s cubic-bezier(.65,0,.25,1); will-change: transform; }
 canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -557,6 +564,37 @@ const SEEDS = [
   ["وداعًا Unbounded", "an essay, Aug 2026", K + "/p/وداعا-unbounded-09d93"],
   ["النشيد الوطني للحالمين", "an essay, Jul 2026", K + "/p/النشيد-الوطني-للحالمين-7a049"],
 ];
+// ---------- sky by Riyadh time ----------
+// Approximate sunrise/sunset for Riyadh (24.71N, 46.68E, UTC+3), then blend dawn / day / dusk tints over the night.
+// Preview any phase with ?sky=night|dawn|day|dusk.
+function riyadhSun(d) {
+  const day = Math.floor((Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) - Date.UTC(d.getUTCFullYear(), 0, 0)) / 864e5);
+  const g = 2 * Math.PI / 365 * (day - 1);
+  const eq = 229.18 * (.000075 + .001868 * Math.cos(g) - .032077 * Math.sin(g) - .014615 * Math.cos(2 * g) - .040849 * Math.sin(2 * g));
+  const decl = .006918 - .399912 * Math.cos(g) + .070257 * Math.sin(g) - .006758 * Math.cos(2 * g) + .000907 * Math.sin(2 * g);
+  const lat = 24.71 * Math.PI / 180;
+  const ha = Math.acos(Math.cos(90.833 * Math.PI / 180) / (Math.cos(lat) * Math.cos(decl)) - Math.tan(lat) * Math.tan(decl)) * 180 / Math.PI;
+  const noon = 720 - 4 * 46.68 - eq + 180; // minutes, Riyadh local
+  return { rise: noon - 4 * ha, set: noon + 4 * ha };
+}
+function skyPhase() {
+  const ramp = (m, a, b, c, e) => m <= a || m >= e ? 0 : m < b ? (m - a) / (b - a) : m <= c ? 1 : (e - m) / (e - c);
+  const forced = (new URLSearchParams(location.search).get("sky") || "").toLowerCase();
+  if (["night", "dawn", "day", "dusk"].includes(forced)) return { dawn: +(forced === "dawn"), day: +(forced === "day"), dusk: +(forced === "dusk") };
+  const now = new Date(), m = ((now.getUTCHours() + 3) % 24) * 60 + now.getUTCMinutes();
+  const { rise, set } = riyadhSun(now);
+  const dawn = ramp(m, rise - 70, rise - 10, rise + 50, rise + 150);
+  const dusk = ramp(m, set - 80, set - 15, set + 20, set + 70);
+  const day = Math.max(0, ramp(m, rise + 30, rise + 150, set - 120, set - 20) - dusk);
+  return { dawn, day, dusk };
+}
+function paintSky() {
+  const fr = document.querySelector(".frame"), p = skyPhase();
+  for (const k in p) fr.style.setProperty("--" + k, p[k].toFixed(3));
+  fr.dataset.sky = p.dusk > .5 ? "dusk" : p.dawn > .5 ? "dawn" : p.day > .5 ? "day" : "night";
+}
+paintSky(); setInterval(paintSky, 5 * 60 * 1000);
+
 let mouseX = -999, mouseY = -999, openSeed = -1;
 const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
