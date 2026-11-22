@@ -186,12 +186,18 @@ body.open .panel { transform: none; }
 @keyframes wind { 0%, 100% { transform: rotate(0deg); } 22% { transform: rotate(.55deg); } 40% { transform: rotate(.15deg); } 63% { transform: rotate(.7deg); } 82% { transform: rotate(-.15deg); } }
 body.open #f, body.open #h { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { #f, #h { animation: none; } #h { transition: none; } }
+/* rare shooting star: a thin stippled streak behind the palm, every ~40-60 s at night (JS-driven, off with reduced motion) */
+.meteor { position: absolute; left: 0; top: 0; width: 150px; height: 1.2px; pointer-events: none; opacity: 0; transform-origin: 100% 50%;
+  background: repeating-linear-gradient(to right, rgba(214,213,208,.9) 0 1.2px, transparent 1.2px 2.6px);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 85%); mask-image: linear-gradient(to right, transparent, #000 85%); }
+.meteor::after { content: ""; position: absolute; right: -1px; top: -.6px; width: 2.4px; height: 2.4px; border-radius: 50%; background: #f2f1ec; box-shadow: 0 0 6px rgba(242,241,236,.8); }
 </style>
 </head>
 <body>
 <div class="frame">
   <div class="scene" id="scene">
     <canvas id="c" aria-hidden="true"></canvas>
+    <div class="meteor" id="meteor" aria-hidden="true"></div>
     <canvas id="f" aria-hidden="true"></canvas>
     <canvas id="h" aria-hidden="true"></canvas>
     <canvas id="g" aria-hidden="true"></canvas>
@@ -657,6 +663,29 @@ function loop(t) {
   if (!reduce) requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
+// ---------- rare shooting star ----------
+// One faint streak across the upper sky every ~40-60 s; skipped by day, while a panel is open, in a hidden tab, or with reduced motion.
+const meteorEl = document.getElementById("meteor");
+function shootStar() {
+  if (reduce || !meteorEl.animate || !W) return;
+  const sky = document.querySelector(".frame").dataset.sky;
+  if (document.hidden || document.body.classList.contains("open") || sky === "day") return;
+  const ltr = Math.random() < .5, ang = (ltr ? 1 : -1) * (14 + Math.random() * 14), len = Math.min(W, H) * (.22 + Math.random() * .14);
+  const x0 = W * (ltr ? .08 + Math.random() * .4 : .52 + Math.random() * .4), y0 = H * (.05 + Math.random() * .2);
+  const rad = ang * Math.PI / 180, dx = Math.cos(rad) * len * (ltr ? 1 : -1), dy = Math.abs(Math.sin(rad)) * len;
+  const rot = Math.atan2(dy, dx); // the streak points along its path, head first
+  const at = (x, y) => `translate(${x - 150}px, ${y}px) rotate(${rot}rad)`;
+  meteorEl.animate([
+    { transform: at(x0, y0), opacity: 0 },
+    { opacity: sky === "night" ? .85 : .5, offset: .18 },
+    { opacity: sky === "night" ? .7 : .4, offset: .7 },
+    { transform: at(x0 + dx, y0 + dy), opacity: 0 }
+  ], { duration: 900 + Math.random() * 500, easing: "cubic-bezier(.3,0,.7,1)" });
+}
+(function nextStar(first) {
+  if (reduce) return;
+  setTimeout(() => { shootStar(); nextStar(false); }, first ? 9000 + Math.random() * 9000 : 40000 + Math.random() * 20000);
+})(true);
 document.querySelector(".frame").addEventListener("pointermove", (e) => {
   const r = gcv.getBoundingClientRect(); mouseX = e.clientX - r.left; mouseY = e.clientY - r.top;
 });

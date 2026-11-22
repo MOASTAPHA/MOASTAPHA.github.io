@@ -14,3 +14,4 @@
 - 2026-11-21 — Hover preview: hovering or focusing a frond label softly brightens that frond on the canvas (it stays lit while its panel is open; sways with the wind, no extra animation loop).
 - 2026-11-21 — Sky by Riyadh time: the night sky now shifts with the Riyadh clock — soft dawn around sunrise, a slightly lifted sky by day, warm dusk near sunset, deep night after (sunrise/sunset computed for Riyadh; preview with ?sky=dawn|day|dusk|night).
 - 2026-11-21 — One-page CV (PDF) added, with download links in the contact and "me" panels on both versions.
+- 2026-11-22 — Shooting star: a faint stippled streak crosses the upper sky behind the palm every ~40–60 s (first one after a few seconds); skipped by day, while a panel is open, in a hidden tab, and with reduced motion.
