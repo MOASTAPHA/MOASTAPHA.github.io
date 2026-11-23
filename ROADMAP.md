@@ -10,7 +10,7 @@ Only Moastapha adds items about his career content. Never invent facts, numbers,
 - [x] Hover preview: hovering a frond label slightly brightens that frond on the canvas
 - [x] Sky by Riyadh time: night sky after sunset, dusk tones near sunset, soft dawn in the morning (Asia/Riyadh clock)
 - [x] Rare shooting star across the sky every ~40–60 s
-- [ ] Keyboard: arrow keys move between fronds; Enter opens; Esc returns (already) — make focus order follow the palm
+- [x] Keyboard: arrow keys move between fronds; Enter opens; Esc returns (already) — make focus order follow the palm
 - [ ] Mobile polish: check 360–430px widths; make sure no label overlaps the trunk or the player
 - [ ] Performance: lazy-load panel images, add width/height to img tags, preconnect only what is used
 - [ ] Arabic mode: a small EN | ع toggle that switches the panel copy to Arabic (Moastapha must supply/approve the Arabic copy first — skip if not provided)

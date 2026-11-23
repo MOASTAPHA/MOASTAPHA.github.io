@@ -536,10 +536,25 @@ tagsEl.addEventListener("pointerout", (e) => { if (tagOf(e) && !e.relatedTarget?
 tagsEl.addEventListener("focusin", (e) => { const id = tagOf(e); if (id) lightFrond(id); });
 tagsEl.addEventListener("focusout", () => lightFrond(current));
 
+// keyboard: Tab / arrow keys walk the palm — left fronds top→down, right fronds top→down, then down the trunk to the ground and roots
+const TAG_ORDER = ["awal", "fg-sports", "prime-ticket", "more-brands", "writing", "me", "contact", "lead"];
+const NEXT = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+document.addEventListener("keydown", (e) => {
+  if (e.altKey || e.ctrlKey || e.metaKey || document.body.classList.contains("open")) return;
+  const tags = [...tagsEl.querySelectorAll(".tag")]; if (!tags.length) return;
+  const i = tags.indexOf(document.activeElement);
+  let j = -1;
+  if (i > -1 && e.key in NEXT) j = (i + NEXT[e.key] + tags.length) % tags.length;
+  else if (i > -1 && (e.key === "Home" || e.key === "End")) j = e.key === "Home" ? 0 : tags.length - 1;
+  else if (i < 0 && e.key in NEXT && (document.activeElement === document.body || !document.activeElement)) j = NEXT[e.key] > 0 ? 0 : tags.length - 1;
+  if (j < 0) return;
+  e.preventDefault(); tags[j].focus({ preventScroll: true });
+});
+
 function placeTags(k) {
   linesSvg.innerHTML = ""; tagsEl.innerHTML = "";
   const narrow = W < 720;
-  Object.entries(anchors).forEach(([id, o]) => {
+  TAG_ORDER.filter((id) => anchors[id]).map((id) => [id, anchors[id]]).forEach(([id, o]) => {
     const dx = (narrow ? 26 : 70) * (o.side === "left" ? -1 : 1) * (o.far ? 1.4 : 1);
     const ly = o.p.y - (o.far ? 0 : 8);
     const lx = o.p.x + dx;
