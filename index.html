@@ -168,9 +168,11 @@ body.open .panel { transform: none; }
   .intro { left: 20px; top: 20px; right: 20px; }
   .intro h1 { font-size: 22px; }
   .hint { display: none; }
-  .note { right: auto; left: 20px; bottom: auto; top: 112px; align-items: flex-start; }
-  .note span { display: none; }
-  .tag { font-size: 12.5px; }
+  .note { right: auto; left: 20px; bottom: auto; top: 130px; align-items: flex-start; }
+  .note > span { display: none; } /* hide the caption only: keep the song name and eq inside the player */
+  /* labels sit on top of fronds on phones: a soft night backing keeps them legible and gives a bigger tap target */
+  .tag { font-size: 12.5px; padding: 8px 9px; min-height: 34px; border-radius: 999px; background: rgba(14,20,34,.62); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+  .player .track { font-size: 12px; }
   .tag .sub { display: none; }
   .panel { width: calc(100% - 20px); border-radius: 6px; }
   .panel-inner { padding: 24px 20px 50px; }
@@ -558,9 +560,6 @@ function placeTags(k) {
     const dx = (narrow ? 26 : 70) * (o.side === "left" ? -1 : 1) * (o.far ? 1.4 : 1);
     const ly = o.p.y - (o.far ? 0 : 8);
     const lx = o.p.x + dx;
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", `M${o.p.x},${o.p.y} Q${(o.p.x + lx) / 2},${ly - 6} ${lx},${ly}`);
-    linesSvg.appendChild(path);
     const b = document.createElement("button");
     b.type = "button"; b.className = "tag " + o.side; b.dataset.open = id;
     b.innerHTML = `${S[id].label}${S[id].sub ? `<span class="sub">${S[id].sub}</span>` : ""}`;
@@ -569,6 +568,13 @@ function placeTags(k) {
     let x = o.side === "left" ? lx - bw - 6 : lx + 6;
     x = Math.max(8, Math.min(W - bw - 8, x));
     b.style.left = x + "px"; b.style.top = (ly - 14) + "px";
+    // leader line ends where the label actually sits (labels clamped at the screen edge no longer get a line poking past them)
+    const ex = o.side === "left" ? Math.max(lx, x + bw) : Math.min(lx, x);
+    if (o.side === "left" ? ex < o.p.x - 6 : ex > o.p.x + 6) {
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", `M${o.p.x},${o.p.y} Q${(o.p.x + ex) / 2},${ly - 6} ${ex},${ly}`);
+      linesSvg.appendChild(path);
+    }
     o.lx = lx; o.ly = ly;
   });
 }
