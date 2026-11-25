@@ -109,7 +109,7 @@ body.open .panel { transform: none; }
 .panel .insight { font-family: var(--display); font-style: italic; font-size: 21px; line-height: 1.4; color: var(--ink); }
 .panel ul { margin: 0; padding: 0 0 0 18px; display: grid; gap: 8px; font-size: 14px; line-height: 1.55; }
 .panel li::marker { color: var(--accent); }
-.panel img.hero { width: 100%; border-radius: 3px; display: block; margin: 0 0 22px; filter: grayscale(.15) contrast(1.02); }
+.panel img.hero { width: 100%; height: auto; border-radius: 3px; display: block; margin: 0 0 22px; filter: grayscale(.15) contrast(1.02); }
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .split > div { background: rgba(255,255,255,.035); padding: 14px 16px; border-radius: 4px; }
 .split b { display: block; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 500; margin-bottom: 6px; color: var(--accent); }
@@ -138,7 +138,7 @@ body.open .panel { transform: none; }
 .roles div span { color: var(--dim); font-size: 12.5px; }
 .roles div em { font-style: normal; color: var(--accent); font-size: 12px; grid-row: span 2; align-self: center; }
 .snap { display: grid; grid-template-columns: 150px 1fr; gap: 18px; padding: 18px 0; border-top: 1px solid var(--hair); }
-.snap img { width: 100%; border-radius: 3px; }
+.snap img { width: 100%; height: auto; border-radius: 3px; }
 .snap h4 { font-family: var(--display); font-weight: 400; font-size: 22px; margin: 0 0 2px; }
 .snap .sec { font-size: 12px; color: var(--dim); margin-bottom: 10px; }
 .snap dl { margin: 0; display: grid; gap: 6px; font-size: 13px; line-height: 1.5; }
@@ -162,7 +162,7 @@ body.open .panel { transform: none; }
 .contact .val { flex: 1; font-size: 16px; user-select: all; }
 .contact button, .contact a.btn { font-size: 12px; border: 1px solid var(--hair); border-radius: 999px; padding: 6px 12px; color: var(--ink); text-decoration: none; }
 .contact button:hover, .contact a.btn:hover { border-color: var(--accent); color: var(--accent); }
-.portrait { width: 100%; max-height: 380px; object-fit: cover; object-position: center 20%; border-radius: 3px; margin-bottom: 20px; }
+.portrait { width: 100%; height: auto; max-height: 380px; object-fit: cover; object-position: center 20%; border-radius: 3px; margin-bottom: 20px; }
 
 @media (max-width: 720px) {
   .intro { left: 20px; top: 20px; right: 20px; }
@@ -237,7 +237,7 @@ const S = {
   awal: { label: "AWAL", sub: "case study · fashion", html: `
     <p class="kicker">Case study 01 · Fashion</p>
     <h2>AWAL</h2><p class="what">Saudi near-luxury everyday basics · content lead since launch</p>
-    <img class="hero" src="img/awal.jpg" alt="AWAL Instagram posts: models in neutral tees and wide jeans against stone walls">
+    <img class="hero" src="img/awal.jpg" width="720" height="720" loading="lazy" decoding="async" alt="AWAL Instagram posts: models in neutral tees and wide jeans against stone walls">
     <h3>The challenge</h3>
     <p>A new Saudi brand launching simple pieces (tees, jeans, cargos) into a market full of loud logos and heritage clichés. No audience yet, products that are easy to copy, and a price above average that it should never have to justify.</p>
     <h3>The insight</h3>
@@ -272,7 +272,7 @@ const S = {
   "fg-sports": { label: "FG Sports", sub: "case study · sports business", html: `
     <p class="kicker">Case study 02 · Sports business</p>
     <h2>FG Sports</h2><p class="what">Saudi sports marketing &amp; consulting firm · Content Manager</p>
-    <img class="hero" src="img/fg.jpg" alt="FG Sports posts: Brand Exposure vs Brand Recall explainer, a Red Bull F1 story and fan interviews at matches">
+    <img class="hero" src="img/fg.jpg" width="720" height="720" loading="lazy" decoding="async" alt="FG Sports posts: Brand Exposure vs Brand Recall explainer, a Red Bull F1 story and fan interviews at matches">
     <h3>The challenge</h3>
     <p>FG speaks to investors, sponsors, clubs and companies, but sports content on social media pulls toward fan reactions and hype. Doing what every sports account does would make a consulting firm look like another fan page.</p>
     <h3>The insight</h3>
@@ -300,7 +300,7 @@ const S = {
   "prime-ticket": { label: "Prime Ticket", sub: "case study · ticketing", html: `
     <p class="kicker">Case study 03 · Ticketing</p>
     <h2>Prime Ticket</h2><p class="what">Saudi online ticketing platform · Content Planner since 2023</p>
-    <img class="hero" src="img/prime.jpg" alt="Prime Ticket event posters: concerts in Jeddah and Riyadh and the Six Kings Slam tennis event">
+    <img class="hero" src="img/prime.jpg" width="720" height="720" loading="lazy" decoding="async" alt="Prime Ticket event posters: concerts in Jeddah and Riyadh and the Six Kings Slam tennis event">
     <h3>The challenge</h3>
     <p>Prime Ticket sells tickets; it doesn't organise the events. The same product goes to two very different buyers, football fans and concert-goers. Generic "tickets available" posts move neither, and paying upfront holds many back.</p>
     <h3>The insight</h3>
@@ -327,15 +327,15 @@ const S = {
   "more-brands": { label: "more brands", sub: "RIYD · AM PM · JMM", html: `
     <p class="kicker">Snapshots</p>
     <h2>Same method, three different answers</h2><p class="what">Three more from 8+ brands, each with its own audience and voice.</p>
-    <div class="snap"><img src="img/riyd.jpg" alt="RIYD mango cheesecake posts"><div><h4>RIYD</h4><div class="sec">Desserts &amp; coffee · Riyadh</div><dl>
+    <div class="snap"><img src="img/riyd.jpg" width="720" height="720" loading="lazy" decoding="async" alt="RIYD mango cheesecake posts"><div><h4>RIYD</h4><div class="sec">Desserts &amp; coffee · Riyadh</div><dl>
       <dt>Audience</dt><dd>Riyadh gatherings and gift-givers. Delivery only, no shop to visit.</dd>
       <dt>Voice</dt><dd>Warm, rhyming Gulf Arabic, with casual lowercase English.</dd>
       <dt>The strategic move</dt><dd>One umbrella line, <span class="ar">حلا لكل جمعاتكم</span>, so seasonal launches like mango build the brand instead of starting over.</dd></dl></div></div>
-    <div class="snap"><img src="img/ampm.jpg" alt="AM PM posts: National Day menu, playful orange ads and an Eid post"><div><h4>AM PM</h4><div class="sec">Casual food</div><dl>
+    <div class="snap"><img src="img/ampm.jpg" width="720" height="720" loading="lazy" decoding="async" alt="AM PM posts: National Day menu, playful orange ads and an Eid post"><div><h4>AM PM</h4><div class="sec">Casual food</div><dl>
       <dt>Audience</dt><dd>Students and young professionals, 16 to 35, eating at any hour.</dd>
       <dt>Voice</dt><dd>Playful, cheeky Gulf Arabic, with a character to match.</dd>
       <dt>The strategic move</dt><dd>A post-rebrand calendar built on Saudi daily life: school runs, office breaks, Friday breakfast, match nights.</dd></dl></div></div>
-    <div class="snap"><img src="img/jmm.jpg" alt="JMM agency posts about branding and advertising ideas"><div><h4>JMM <span class="ar">جَم</span></h4><div class="sec">Creative agency</div><dl>
+    <div class="snap"><img src="img/jmm.jpg" width="720" height="720" loading="lazy" decoding="async" alt="JMM agency posts about branding and advertising ideas"><div><h4>JMM <span class="ar">جَم</span></h4><div class="sec">Creative agency</div><dl>
       <dt>Audience</dt><dd>Founders and marketing directors choosing an agency.</dd>
       <dt>Voice</dt><dd>A point of view, not marketing, built on its Arabic name, meaning "abundant".</dd>
       <dt>The strategic move</dt><dd>A homepage built on the name, <span class="ar">نفس الفكرة.. بس جَم.</span>, plus four cornerstone LinkedIn essays.</dd></dl></div></div>` },
@@ -359,7 +359,7 @@ const S = {
   me: { label: "me", sub: "who's behind this", html: `
     <p class="kicker">About</p>
     <h2>Strategy is only real when a team can deliver it every week</h2>
-    <img class="portrait" src="img/casual.jpg" alt="Moastapha Al-Qaraani leaning on a tree, smiling">
+    <img class="portrait" src="img/casual.jpg" width="711" height="1000" loading="lazy" decoding="async" alt="Moastapha Al-Qaraani leaning on a tree, smiling">
     <p>I run content for several brands at once, in sports business, live events, food and fashion. I set each brand's strategy and voice, turn it into monthly plans, and lead the writers and designers who deliver it: briefs, reviews, approvals and reporting. I still write the lines that define a brand.</p>
     <h3>Now, in parallel</h3>
     <div class="roles">
@@ -766,6 +766,9 @@ window.onYouTubeIframeAPIReady = () => {
     } });
 };
 function loadYT() { if (document.getElementById("yt-api")) return; const t = document.createElement("script"); t.id = "yt-api"; t.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(t); }
+// warm up the YouTube connection only when someone reaches for the play button
+function warmYT() { if (document.getElementById("yt-pc")) return; const l = document.createElement("link"); l.id = "yt-pc"; l.rel = "preconnect"; l.href = "https://www.youtube.com"; document.head.appendChild(l); }
+["pointerenter", "focus", "touchstart"].forEach((ev) => playBtn.addEventListener(ev, warmYT, { once: true, passive: true }));
 playBtn.addEventListener("click", () => {
   if (!ytReady) { wantPlay = true; setOn(true); loadYT(); return; }
   const st = yt.getPlayerState();

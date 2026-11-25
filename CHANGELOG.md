@@ -17,3 +17,4 @@
 - 2026-11-22 — Shooting star: a faint stippled streak crosses the upper sky behind the palm every ~40–60 s (first one after a few seconds); skipped by day, while a panel is open, in a hidden tab, and with reduced motion.
 - 2026-11-23 — Keyboard: Tab and arrow keys now walk the palm in order (left fronds top→down, right fronds top→down, then "work with me" and the roots); Home/End jump to first/last, Enter opens, Esc returns to the same label.
 - 2026-11-24 — Mobile polish (360–430px): the player now shows the song name on phones (it was hidden), frond labels get a soft night backing so they read over the leaves and are easier to tap, leader lines stop at the label, and the player sits clear of the intro text.
+- 2026-11-25 — Performance: panel images now carry their real width/height (no layout jump while they load) and load lazily/async; the YouTube connection is warmed up only when someone reaches for the play button, so nothing extra connects on page load.
