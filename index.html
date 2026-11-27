@@ -43,7 +43,9 @@
 html, body { height: 100%; margin: 0; }
 body { background: var(--night-deep); color: var(--ink); font-family: var(--body); font-weight: 300; overflow: hidden; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
-:focus-visible { outline: 1px dashed var(--accent); outline-offset: 4px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+.player :focus-visible { outline-color: var(--night); outline-offset: 1px; } /* red on the light pill is too faint: use night */
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 
 .frame { --dawn: 0; --day: 0; --dusk: 0; position: fixed; inset: 10px; background:
     /* sky by Riyadh time: each layer fades in with its share of the hour (set by JS; all 0 = plain night) */
@@ -204,7 +206,7 @@ body.open #f, body.open #h { animation-play-state: paused; }
     <canvas id="f" aria-hidden="true"></canvas>
     <canvas id="h" aria-hidden="true"></canvas>
     <canvas id="g" aria-hidden="true"></canvas>
-    <div id="flowers" aria-label="Glowing flowers: lines I wrote"></div>
+    <div id="flowers" role="group" aria-label="Glowing flowers: lines I wrote"></div>
     <svg class="lines" id="lines" aria-hidden="true"></svg>
     <nav id="tags" aria-label="Sections"></nav>
   </div>
@@ -220,17 +222,18 @@ body.open #f, body.open #h { animation-play-state: paused; }
       <button type="button" id="play" aria-label="Play That's Life by Frank Sinatra"><svg id="ico" width="11" height="12" viewBox="0 0 11 12" aria-hidden="true"><path d="M1 1l9 5-9 5z" fill="currentColor"/></svg></button>
       <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
       <span class="track">that's life · frank sinatra</span>
-      <a href="https://www.youtube.com/watch?v=UCENTf_LWYA" target="_blank" rel="noopener" aria-label="Open on YouTube">↗</a>
+      <a href="https://www.youtube.com/watch?v=UCENTf_LWYA" target="_blank" rel="noopener" aria-label="Listen to That's Life on YouTube (opens in a new tab)">↗</a>
     </div>
     <div id="yt" aria-hidden="true"></div>
   </div>
 </div>
-<aside class="panel" id="panel" aria-live="polite" aria-label="Section details">
+<aside class="panel" id="panel" aria-label="Section details" inert>
   <div class="panel-inner">
     <button class="back" id="back" type="button">← back to the palm</button>
     <div id="content"></div>
   </div>
 </aside>
+<div class="sr" id="sr" aria-live="polite"></div>
 
 <script>
 // ---------- content ----------
@@ -651,6 +654,7 @@ function setupFlowers() {
 function showSeed(i, el) {
   const [line, src, url] = SEEDS[i];
   seed.innerHTML = `<span class="ar">${line}</span><small>${url ? `<a href="${url}" target="_blank" rel="noopener">${src} ↗</a>` : src}</small>`;
+  markArabic(seed);
   seed.hidden = false; openSeed = i;
   flowers.forEach((f, j) => f.el.setAttribute("aria-expanded", j === i ? "true" : "false"));
   const r = el.getBoundingClientRect(), sw = seed.offsetWidth, sh = seed.offsetHeight;
@@ -717,14 +721,20 @@ document.addEventListener("click", (e) => { if (openSeed > -1 && !seed.contains(
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSeed(); });
 
 // ---------- open / close ----------
-const scene = document.getElementById("scene"), content = document.getElementById("content");
+const scene = document.getElementById("scene"), content = document.getElementById("content"), panelEl = document.getElementById("panel");
+const srEl = document.getElementById("sr");
+function say(msg) { srEl.textContent = ""; setTimeout(() => { srEl.textContent = msg; }, 30); }
+// screen readers switch to an Arabic voice for Arabic lines
+function markArabic(root) { root.querySelectorAll(".ar").forEach((e) => e.setAttribute("lang", "ar")); }
 let current = null;
 function open(id, fromHash) {
   if (!S[id]) return;
   current = id;
   lightFrond(id);
   content.innerHTML = S[id].html;
+  markArabic(content);
   fillUpdated();
+  panelEl.inert = false; panelEl.setAttribute("aria-label", S[id].label + (S[id].sub ? " — " + S[id].sub : ""));
   document.body.classList.add("open");
   document.querySelectorAll(".tag").forEach((t) => t.setAttribute("aria-current", t.dataset.open === id ? "true" : "false"));
   const o = anchors[id];
@@ -759,6 +769,7 @@ function close() {
   const was = current; current = null;
   lightFrond(null);
   document.body.classList.remove("open");
+  panelEl.inert = true; // the closed panel slides off-screen: keep its links out of the Tab order
   scene.style.transform = "";
   document.querySelectorAll(".tag").forEach((t) => t.removeAttribute("aria-current"));
   history.replaceState(null, "", location.pathname + location.search);
@@ -767,7 +778,7 @@ function close() {
 document.addEventListener("click", (e) => {
   const o = e.target.closest("[data-open]"); if (o) { open(o.dataset.open); return; }
   const c = e.target.closest("[data-copy]");
-  if (c) { navigator.clipboard.writeText(c.dataset.copy).then(() => { c.textContent = "copied"; }, () => { c.textContent = "select & copy"; }); }
+  if (c) { navigator.clipboard.writeText(c.dataset.copy).then(() => { c.textContent = "copied"; say("Copied " + c.dataset.copy); }, () => { c.textContent = "select & copy"; }); }
 });
 document.getElementById("back").addEventListener("click", close);
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
@@ -781,7 +792,8 @@ function setOn(on) { playerEl.classList.toggle("on", on); ico.innerHTML = on ? P
 window.onYouTubeIframeAPIReady = () => {
   yt = new YT.Player("yt", { width: 1, height: 1, videoId: "UCENTf_LWYA", playerVars: { playsinline: 1, controls: 0 },
     events: {
-      onReady: () => { ytReady = true; yt.setVolume(70); if (wantPlay) yt.playVideo(); },
+      onReady: () => { ytReady = true;
+        const fr = yt.getIframe && yt.getIframe(); if (fr) { fr.setAttribute("tabindex", "-1"); fr.setAttribute("aria-hidden", "true"); fr.title = "Music player (hidden)"; } yt.setVolume(70); if (wantPlay) yt.playVideo(); },
       onStateChange: (e) => setOn(e.data === 1 || e.data === 3),
       onError: () => { setOn(false); window.open("https://www.youtube.com/watch?v=UCENTf_LWYA", "_blank", "noopener"); },
     } });

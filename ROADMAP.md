@@ -15,7 +15,7 @@ Only Moastapha adds items about his career content. Never invent facts, numbers,
 - [x] Performance: lazy-load panel images, add width/height to img tags, preconnect only what is used
 - [ ] Arabic mode: a small EN | ع toggle that switches the panel copy to Arabic (Moastapha must supply/approve the Arabic copy first — skip if not provided)
 - [x] "Last updated" line in the footer of the "me" panel, filled from the latest CHANGELOG date
-- [ ] Accessibility pass: contrast of dim text, focus rings, alt text, aria labels on the player
+- [x] Accessibility pass: contrast of dim text, focus rings, alt text, aria labels on the player
 
 ## Waiting on Moastapha (do NOT do these without his input)
 - Verified results/numbers for AWAL, FG Sports, Prime Ticket case studies
