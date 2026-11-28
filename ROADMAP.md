@@ -16,6 +16,7 @@ Only Moastapha adds items about his career content. Never invent facts, numbers,
 - [ ] Arabic mode: a small EN | ع toggle that switches the panel copy to Arabic (Moastapha must supply/approve the Arabic copy first — skip if not provided)
 - [x] "Last updated" line in the footer of the "me" panel, filled from the latest CHANGELOG date
 - [x] Accessibility pass: contrast of dim text, focus rings, alt text, aria labels on the player
+- [x] Back button closes the panel: on phones the back gesture (or browser Back) returns to the palm instead of leaving the site; deep links like /#awal still work
 
 ## Waiting on Moastapha (do NOT do these without his input)
 - Verified results/numbers for AWAL, FG Sports, Prime Ticket case studies

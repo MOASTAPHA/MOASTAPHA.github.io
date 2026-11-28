@@ -727,8 +727,10 @@ function say(msg) { srEl.textContent = ""; setTimeout(() => { srEl.textContent =
 // screen readers switch to an Arabic voice for Arabic lines
 function markArabic(root) { root.querySelectorAll(".ar").forEach((e) => e.setAttribute("lang", "ar")); }
 let current = null;
+let pushed = false; // true while the open panel owns a history step we added
 function open(id, fromHash) {
   if (!S[id]) return;
+  const wasOpen = !!current;
   current = id;
   lightFrond(id);
   content.innerHTML = S[id].html;
@@ -743,7 +745,11 @@ function open(id, fromHash) {
   scene.style.transformOrigin = `${o.p.x}px ${o.p.y}px`;
   scene.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
   document.getElementById("panel").scrollTop = 0;
-  if (!fromHash && location.hash.slice(1) !== id) history.replaceState(null, "", "#" + id);
+  // phone back gesture / browser Back closes the panel: the first open adds one history step, switching sections reuses it
+  if (!fromHash && location.hash.slice(1) !== id) {
+    if (!wasOpen) { history.pushState({ palm: id }, "", "#" + id); pushed = true; }
+    else history.replaceState(pushed ? { palm: id } : null, "", "#" + id);
+  }
   setTimeout(() => document.getElementById("back").focus({ preventScroll: true }), 50);
 }
 // "Last updated" in the me panel: read the newest date from CHANGELOG.md (static date in the HTML is the fallback)
@@ -764,15 +770,17 @@ function fillUpdated() {
     if (dates.length) { lastUpdated = dates[dates.length - 1]; showUpdated(lastUpdated); }
   }).catch(() => {});
 }
-function close() {
+function close(fromHash) {
   if (!current) return;
+  if (!fromHash && pushed && history.state && history.state.palm) { history.back(); return; } // step back; the history handler closes
+  pushed = false;
   const was = current; current = null;
   lightFrond(null);
   document.body.classList.remove("open");
   panelEl.inert = true; // the closed panel slides off-screen: keep its links out of the Tab order
   scene.style.transform = "";
   document.querySelectorAll(".tag").forEach((t) => t.removeAttribute("aria-current"));
-  history.replaceState(null, "", location.pathname + location.search);
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
   const t = document.querySelector(`.tag[data-open="${was}"]`); if (t) t.focus({ preventScroll: true });
 }
 document.addEventListener("click", (e) => {
@@ -780,9 +788,12 @@ document.addEventListener("click", (e) => {
   const c = e.target.closest("[data-copy]");
   if (c) { navigator.clipboard.writeText(c.dataset.copy).then(() => { c.textContent = "copied"; say("Copied " + c.dataset.copy); }, () => { c.textContent = "select & copy"; }); }
 });
-document.getElementById("back").addEventListener("click", close);
+document.getElementById("back").addEventListener("click", () => close());
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
-window.addEventListener("hashchange", () => { const h = location.hash.slice(1); if (S[h]) open(h, true); else close(); });
+// hashchange and popstate can both report the same step: act once
+function fromHistory() { const h = location.hash.slice(1); if (S[h]) { pushed = !!(history.state && history.state.palm); if (h !== current) open(h, true); } else close(true); }
+window.addEventListener("hashchange", fromHistory);
+window.addEventListener("popstate", fromHistory);
 
 // ---------- music (YouTube player, starts only on click) ----------
 let yt = null, ytReady = false, wantPlay = false;
